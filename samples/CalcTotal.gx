@@ -1,0 +1,28 @@
+Procedure CalcTotal
+{
+	&Total = 0
+	For Each
+		Where InvoiceId = &InvoiceId
+		&Total += InvoiceLineAmount
+	EndFor
+	&Total = Round(&Total, 2)
+	&Result = New()
+	&Result.Amount = &Total
+	&Result.Date = &Today
+	Msg("Total calculated", status)
+	Return
+
+	#Rules
+		parm(in:&InvoiceId, out:&Total);
+	#End
+
+	#Variables
+		Total [ DataType = 'Numeric(12.2)' ]
+	#End
+
+	#Properties
+		Name = "CalcTotal"
+
+		MainProgram = "False"
+	#End
+}

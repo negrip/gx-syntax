@@ -1,0 +1,378 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "GeneXus (GX)",
+  "scopeName": "source.gx",
+  "patterns": [
+    { "include": "#code-object" },
+    { "include": "#structure-object" },
+    { "include": "#sections" },
+    { "include": "#code" }
+  ],
+  "repository": {
+
+    "code-object": {
+      "comment": "Objetos cuyo cuerpo es codigo GeneXus: Procedure, WebPanel, DataProvider, etc.",
+      "begin": "(?i)\\A\\s*(Procedure|WebPanel|WebComponent|DataProvider|API|MasterPage|SDPanel|DataSelector)\\s+([A-Za-z_][\\w.]*)",
+      "beginCaptures": {
+        "1": { "name": "storage.type.class.gx" },
+        "2": { "name": "entity.name.type.class.gx" }
+      },
+      "end": "\\z",
+      "patterns": [
+        { "include": "#sections" },
+        { "include": "#code" }
+      ]
+    },
+
+    "structure-object": {
+      "comment": "Resto de los objetos: Transaction, Table, SDT, Attribute, Domain, Environment, KnowledgeBase...",
+      "begin": "\\A\\s*([A-Za-z][\\w]*)(?:[ \\t]+([A-Za-z_][\\w.]*))?[ \\t]*$",
+      "beginCaptures": {
+        "1": { "name": "storage.type.class.gx" },
+        "2": { "name": "entity.name.type.class.gx" }
+      },
+      "end": "\\z",
+      "patterns": [
+        { "include": "#sections" },
+        { "include": "#structure" }
+      ]
+    },
+
+    "sections": {
+      "patterns": [
+        { "include": "#section-documentation" },
+        { "include": "#section-properties" },
+        { "include": "#section-variables" },
+        { "include": "#section-code" },
+        { "include": "#section-generic" }
+      ]
+    },
+
+    "section-documentation": {
+      "begin": "(?i)^\\s*(#)(documentation)\\s*$",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "end": "(?i)^\\s*(#)(end)\\b",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "patterns": [
+        { "include": "text.html.markdown" }
+      ]
+    },
+
+    "section-properties": {
+      "begin": "(?i)^\\s*(#)(properties)\\s*$",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "end": "(?i)^\\s*(#)(end)\\b",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#property-assignment" },
+        { "include": "#values" }
+      ]
+    },
+
+    "section-variables": {
+      "begin": "(?i)^\\s*(#)(variables)\\s*$",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "end": "(?i)^\\s*(#)(end)\\b",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#declaration" },
+        { "include": "#property-list" }
+      ]
+    },
+
+    "section-code": {
+      "begin": "(?i)^\\s*(#)(rules|events|conditions|source|code|formulas?|calculations?)\\s*$",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "end": "(?i)^\\s*(#)(end)\\b",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "patterns": [
+        { "include": "#code" }
+      ]
+    },
+
+    "section-generic": {
+      "comment": "Indexes, Backend, Frontend, References, DesignStyles, Version, etc.",
+      "begin": "^\\s*(#)([A-Za-z]\\w*)\\s*$",
+      "beginCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "end": "(?i)^\\s*(#)(end)\\b",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.section.gx" },
+        "2": { "name": "keyword.control.section.gx" }
+      },
+      "patterns": [
+        { "include": "#structure" }
+      ]
+    },
+
+    "attribute-declaration": {
+      "comment": "Declaracion de atributo en Transaction/Table/SDT: Nombre, Nombre*, Nombre! o Nombre [ ... ]",
+      "match": "^\\s*([A-Za-z_]\\w*)([*!]?)(?=\\s*(?:\\[|\\{|$))",
+      "captures": {
+        "1": { "name": "variable.other.constant.attribute.gx" },
+        "2": { "name": "keyword.operator.key-marker.gx" }
+      }
+    },
+
+    "structure": {
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#attribute-declaration" },
+        { "include": "#property-list" },
+        { "include": "#property-assignment" },
+        { "include": "#values" }
+      ]
+    },
+
+    "declaration": {
+      "comment": "Atributo o variable declarada: Nombre, Nombre*, Nombre! o Nombre [ ... ]",
+      "match": "^\\s*([A-Za-z_]\\w*)([*!]?)(?=\\s*(?:\\[|\\{|$))",
+      "captures": {
+        "1": { "name": "variable.other.declaration.gx" },
+        "2": { "name": "keyword.operator.key-marker.gx" }
+      }
+    },
+
+    "property-list": {
+      "comment": "[ DataType = 'Numeric(10.0)', Autonumber = 'True' ] (puede ocupar varias lineas)",
+      "begin": "\\[",
+      "beginCaptures": { "0": { "name": "punctuation.definition.list.begin.gx" } },
+      "end": "\\]",
+      "endCaptures": { "0": { "name": "punctuation.definition.list.end.gx" } },
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#property-assignment" },
+        { "include": "#values" },
+        { "match": ",", "name": "punctuation.separator.comma.gx" }
+      ]
+    },
+
+    "property-assignment": {
+      "match": "([A-Za-z_][\\w.]*)\\s*(=)",
+      "captures": {
+        "1": { "name": "variable.other.property.gx" },
+        "2": { "name": "keyword.operator.assignment.gx" }
+      }
+    },
+
+    "values": {
+      "patterns": [
+        { "include": "#strings" },
+        { "include": "#constants" },
+        { "include": "#numbers" }
+      ]
+    },
+
+    "code": {
+      "patterns": [
+        { "include": "#comments" },
+        { "include": "#strings" },
+        { "include": "#rule-context-tag" },
+        { "include": "#event-sub-declaration" },
+        { "include": "#subroutine-name" },
+        { "include": "#enum-value" },
+        { "include": "#parm-direction" },
+        { "include": "#variables" },
+        { "include": "#member-access" },
+        { "include": "#rule-functions" },
+        { "include": "#builtin-functions" },
+        { "include": "#keywords" },
+        { "include": "#function-call" },
+        { "include": "#word-operators" },
+        { "include": "#constants" },
+        { "include": "#qualifier" },
+        { "include": "#numbers" },
+        { "include": "#attributes" },
+        { "include": "#operators" }
+      ]
+    },
+
+    "attributes": {
+      "comment": "Identificador suelto (sin &) que no es keyword ni funcion: atributo de la base de datos",
+      "match": "\\b[A-Za-z_]\\w*\\b",
+      "name": "variable.other.constant.attribute.gx"
+    },
+
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.gx",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.gx",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+
+    "strings": {
+      "patterns": [
+        {
+          "comment": "Literal no traducible: !\"texto\"",
+          "name": "string.quoted.double.nontranslatable.gx",
+          "begin": "!\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.gx", "match": "\\\\." }
+          ]
+        },
+        {
+          "name": "string.quoted.double.gx",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.gx", "match": "\\\\." }
+          ]
+        },
+        {
+          "name": "string.quoted.single.gx",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            { "name": "constant.character.escape.gx", "match": "\\\\." }
+          ]
+        }
+      ]
+    },
+
+    "rule-context-tag": {
+      "comment": "[web] { ... } dentro de reglas y eventos generados por patterns",
+      "match": "^\\s*(\\[)([A-Za-z]+)(\\])\\s*$",
+      "captures": {
+        "1": { "name": "punctuation.definition.tag.gx" },
+        "2": { "name": "entity.other.attribute-name.platform.gx" },
+        "3": { "name": "punctuation.definition.tag.gx" }
+      }
+    },
+
+    "event-sub-declaration": {
+      "comment": "Event Start / Event After Trn / Event 'Boton' / Event Ctl.Click / Sub 'Nombre'",
+      "match": "(?i)^\\s*(event|sub)\\b([^/\\r\\n]*?)\\s*(?=//|/\\*|$)",
+      "captures": {
+        "1": { "name": "keyword.control.declaration.gx" },
+        "2": { "name": "entity.name.function.event.gx" }
+      }
+    },
+
+    "subroutine-name": {
+      "comment": "Do 'Subrutina' / referencias a eventos de usuario entre comillas simples en codigo",
+      "match": "(?i)\\b(do)\\s+('[^']*')",
+      "captures": {
+        "1": { "name": "keyword.control.gx" },
+        "2": { "name": "entity.name.function.subroutine.gx" }
+      }
+    },
+
+    "enum-value": {
+      "comment": "Tipo:Valor, por ejemplo StyleClass:BtnToggle. Excluye in:/out:/inout: de parm()",
+      "match": "\\b(?!(?i:in|out|inout)\\b)([A-Za-z_]\\w*)(:)([A-Za-z_]\\w*)",
+      "captures": {
+        "1": { "name": "support.class.gx" },
+        "3": { "name": "support.constant.enum.gx" }
+      }
+    },
+
+    "parm-direction": {
+      "match": "(?i)\\b(in|out|inout)(?=\\s*:)",
+      "name": "storage.modifier.parameter-direction.gx"
+    },
+
+    "variables": {
+      "match": "&[A-Za-z_]\\w*",
+      "name": "variable.other.gx"
+    },
+
+    "member-access": {
+      "patterns": [
+        {
+          "match": "(?<=\\.)[A-Za-z_]\\w*(?=\\s*\\()",
+          "name": "entity.name.function.method.gx"
+        },
+        {
+          "match": "(?<=\\.)[A-Za-z_]\\w*",
+          "name": "variable.other.property.gx"
+        }
+      ]
+    },
+
+    "rule-functions": {
+      "match": "(?i)\\b(parm|noaccept|noprompt|prompt|msg|error|add|subtract|serial|default|update|call|refcall|refmsg|color|order|blink|submit|link|nodefault|noalert|ifempty)\\b(?=\\s*\\()",
+      "name": "support.function.rule.gx"
+    },
+
+    "builtin-functions": {
+      "match": "(?i)\\b(Today|Now|Trim|RTrim|LTrim|Len|Substr|Str|Val|Format|Lower|Upper|Mod|Round|Trunc|Abs|Sqrt|Int|Rand|Space|Replace|StrReplace|IndexOf|Contains|StartsWith|EndsWith|Pos|NewLine|Udp|Count|Sum|Max|Min|Average|Find|DToC|CToD|DToT|TToC|CToT|YMDtoD|Year|Month|Day|Hour|Minute|Second|Age|AddYears|AddMonths|AddDays|AddSeconds|IsAuthorized|NotAuthorized|NullValue|IsNull|Left|Right|PadL|PadR|Concat|Lines|Strsearch|StrCmp|GetMessage|Gxs)\\b(?=\\s*\\()",
+      "name": "support.function.builtin.gx"
+    },
+
+    "function-call": {
+      "match": "\\b[A-Za-z_]\\w*(?=\\s*\\()",
+      "name": "entity.name.function.call.gx"
+    },
+
+    "keywords": {
+      "match": "(?i)\\b(if|else|elseif|endif|for\\s+each|endfor|for|do\\s+case|endcase|case|otherwise|do|while|endwhile|endsub|endevent|return|exit|new|endnew|when\\s+none|when\\s+duplicate|when|where|order|unique|defined\\s+by|using|in|to|step|commit|rollback|call|submit|print|header|footer|group|endgroup|sub|event|input|output)\\b",
+      "name": "keyword.control.gx"
+    },
+
+    "word-operators": {
+      "match": "(?i)\\b(and|or|not|like|mod|div)\\b",
+      "name": "keyword.operator.word.gx"
+    },
+
+    "constants": {
+      "match": "(?i)\\b(true|false|null)\\b",
+      "name": "constant.language.gx"
+    },
+
+    "qualifier": {
+      "comment": "TrnMode.Insert, StyleClass:Nombre, Form.Caption: el prefijo es un tipo/objeto",
+      "match": "\\b([A-Za-z_]\\w*)(?=\\s*[.:][A-Za-z_])",
+      "captures": {
+        "1": { "name": "support.class.gx" }
+      }
+    },
+
+    "numbers": {
+      "match": "\\b\\d+(?:\\.\\d+)?\\b",
+      "name": "constant.numeric.gx"
+    },
+
+    "operators": {
+      "patterns": [
+        { "match": "<>|<=|>=|!=|\\+=|-=|\\*=|/=|[=<>+\\-*/]", "name": "keyword.operator.gx" },
+        { "match": "[;,]", "name": "punctuation.separator.gx" }
+      ]
+    }
+  }
+}

@@ -1,0 +1,48 @@
+Transaction Customer
+{
+	CustomerId* [ DataType = 'Numeric(8.0)', Autonumber = 'True' ]
+
+	CustomerName! [ DataType = 'VarChar(60)' ]
+
+	CustomerEmail [ DataType = 'VarChar(100)' ]
+
+	#Rules
+		/* Validations */
+		[web]
+		{
+		noaccept(CustomerId);
+		noprompt(CustomerId);
+		}
+		error("Name is required") if CustomerName.IsEmpty();
+	#End
+
+	#Events
+		Event Start
+			If not IsAuthorized(&PgmName)
+				NotAuthorized(&PgmName)
+			Endif
+		EndEvent
+
+		Event After Trn
+			// Nothing else to do
+			Return
+		EndEvent
+	#End
+
+	#Variables
+		PgmName [ DataType = 'Character(40)' ]
+
+		IsAuthorized [ DataType = 'Boolean' ]
+	#End
+
+	#Documentation
+		# Customer
+		Stores the customers of the system.
+	#End
+
+	#Properties
+		Name = "Customer"
+
+		BusinessComponent = "True"
+	#End
+}

@@ -1,0 +1,75 @@
+{
+  "name": "gx-syntax",
+  "displayName": "GX Syntax",
+  "description": "Syntax highlighting para objetos GeneXus en archivos .gx (Procedure, Transaction, WebPanel, DataProvider, SDT, Table, etc.).",
+  "version": "0.2.1",
+  "publisher": "negrip",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/negrip/gx-syntax.git"
+  },
+  "homepage": "https://github.com/negrip/gx-syntax#readme",
+  "bugs": {
+    "url": "https://github.com/negrip/gx-syntax/issues"
+  },
+  "keywords": [
+    "genexus",
+    "gx",
+    "syntax highlighting",
+    "theme"
+  ],
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "genexus-gx",
+        "aliases": [
+          "GeneXus (GX)",
+          "gx"
+        ],
+        "extensions": [
+          ".gx"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "GX Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/gx-dark-color-theme.json"
+      },
+      {
+        "label": "GX Light",
+        "uiTheme": "vs",
+        "path": "./themes/gx-light-color-theme.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "genexus-gx",
+        "scopeName": "source.gx",
+        "path": "./syntaxes/gx.tmLanguage.json",
+        "embeddedLanguages": {
+          "text.html.markdown": "markdown"
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "test": "node scripts/tokenize-check.js",
+    "themes": "node scripts/build-themes.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@vscode/vsce": "^3.0.0",
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.1.0"
+  }
+}

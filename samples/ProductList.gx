@@ -1,0 +1,60 @@
+WebPanel ProductList
+{
+	#Rules
+		parm(in:&CategoryId, out:&SelectedId);
+		order(ProductName);
+	#End
+
+	#Events
+		Event Start
+			Form.Caption = Format("Products of %1", &CategoryName)
+			&Label = !"Back"
+			Do 'LoadTotals'
+		EndEvent
+
+		Event 'Toggle'
+			if Panel.Class = StyleClass:Collapsed
+				Panel.Class = StyleClass:Expanded
+			else
+				Panel.Class = StyleClass:Collapsed
+			endif
+		EndEvent
+
+		Event Grid.Load
+			Do Case
+				Case ProductStock = 0
+					&Status = "Out of stock"
+				Case ProductStock < 10
+					&Status = "Low"
+				Otherwise
+					&Status = "Ok"
+			EndCase
+		EndEvent
+
+		Sub 'LoadTotals'
+			For Each
+				Where CategoryId = &CategoryId
+				&Total += ProductPrice * ProductStock
+			EndFor
+		EndSub
+	#End
+
+	#Conditions
+		CategoryId = &CategoryId ;
+		ProductName LIKE &Filter when not &Filter.IsEmpty();
+	#End
+
+	#Variables
+		CategoryId [ DataType = 'Attribute:CategoryId' ]
+
+		Total [ DataType = 'Numeric(12.2)' ]
+
+		Status [ DataType = 'Character(20)' ]
+	#End
+
+	#Properties
+		Name = "ProductList"
+
+		Description = "Product list"
+	#End
+}

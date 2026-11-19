@@ -1,0 +1,23 @@
+Table Invoice
+{
+	InvoiceId*
+
+	InvoiceDate
+
+	InvoiceTotal
+
+	#Indexes
+		IInvoice
+		[
+			Source = 'Automatic',
+			Type = 'Primary Key'
+		]
+		{
+			InvoiceId
+		}
+	#End
+
+	#Properties
+		Name = "Invoice"
+	#End
+}

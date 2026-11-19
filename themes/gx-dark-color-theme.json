@@ -1,0 +1,185 @@
+{
+  "name": "GX Dark",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#171717",
+    "editor.foreground": "#FAFAFA",
+    "editor.lineHighlightBackground": "#262626",
+    "editor.selectionBackground": "#06CBC133",
+    "editorCursor.foreground": "#06CBC1",
+    "editorLineNumber.foreground": "#A3A3A3",
+    "editorLineNumber.activeForeground": "#FAFAFA",
+    "statusBar.background": "#081E57",
+    "statusBar.foreground": "#FFFFFF",
+    "statusBar.noFolderBackground": "#081E57",
+    "statusBar.debuggingBackground": "#281D57",
+    "statusBar.border": "#00000000",
+    "statusBarItem.hoverBackground": "#FFFFFF1F",
+    "statusBarItem.remoteBackground": "#1F2F98",
+    "statusBarItem.remoteForeground": "#FFFFFF"
+  },
+  "tokenColors": [
+    {
+      "scope": [
+        "comment",
+        "comment.line.double-slash.gx",
+        "comment.block.gx"
+      ],
+      "settings": {
+        "foreground": "#A3A3A3",
+        "fontStyle": "italic"
+      }
+    },
+    {
+      "scope": [
+        "keyword.control.section.gx",
+        "punctuation.definition.section.gx"
+      ],
+      "settings": {
+        "foreground": "#D0D7FF",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "storage.type.class.gx"
+      ],
+      "settings": {
+        "foreground": "#06CBC1",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.type.class.gx"
+      ],
+      "settings": {
+        "foreground": "#FAFAFA",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "keyword.control.gx",
+        "keyword.control.declaration.gx",
+        "keyword.operator.word.gx"
+      ],
+      "settings": {
+        "foreground": "#06CBC1"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.function.event.gx",
+        "entity.name.function.subroutine.gx"
+      ],
+      "settings": {
+        "foreground": "#FAFAFA",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "entity.name.function.call.gx",
+        "entity.name.function.method.gx"
+      ],
+      "settings": {
+        "foreground": "#FAFAFA"
+      }
+    },
+    {
+      "scope": [
+        "support.function.rule.gx",
+        "support.function.builtin.gx"
+      ],
+      "settings": {
+        "foreground": "#D0D7FF",
+        "fontStyle": "bold"
+      }
+    },
+    {
+      "scope": [
+        "variable.other.gx",
+        "variable.other.declaration.gx"
+      ],
+      "settings": {
+        "foreground": "#7BD5F5"
+      }
+    },
+    {
+      "scope": [
+        "variable.other.constant.attribute.gx"
+      ],
+      "settings": {
+        "foreground": "#5B8DFF"
+      }
+    },
+    {
+      "scope": [
+        "support.constant.enum.gx"
+      ],
+      "settings": {
+        "foreground": "#C792EA"
+      }
+    },
+    {
+      "scope": [
+        "variable.other.property.gx"
+      ],
+      "settings": {
+        "foreground": "#D0D7FF"
+      }
+    },
+    {
+      "scope": [
+        "support.class.gx",
+        "storage.modifier.parameter-direction.gx"
+      ],
+      "settings": {
+        "foreground": "#D0D7FF"
+      }
+    },
+    {
+      "scope": [
+        "entity.other.attribute-name.platform.gx",
+        "punctuation.definition.tag.gx"
+      ],
+      "settings": {
+        "foreground": "#A3A3A3"
+      }
+    },
+    {
+      "scope": [
+        "string.quoted.single.gx",
+        "string.quoted.double.gx",
+        "string.quoted.double.nontranslatable.gx"
+      ],
+      "settings": {
+        "foreground": "#F2B83A"
+      }
+    },
+    {
+      "scope": [
+        "constant.numeric.gx",
+        "constant.language.gx"
+      ],
+      "settings": {
+        "foreground": "#3CC884"
+      }
+    },
+    {
+      "scope": [
+        "keyword.operator.gx",
+        "keyword.operator.assignment.gx",
+        "keyword.operator.key-marker.gx",
+        "punctuation.separator.gx",
+        "punctuation.separator.comma.gx",
+        "punctuation.definition.list.begin.gx",
+        "punctuation.definition.list.end.gx"
+      ],
+      "settings": {
+        "foreground": "#A3A3A3"
+      }
+    }
+  ]
+}
