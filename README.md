@@ -19,11 +19,14 @@ Es declarativa: solo una gramática TextMate y dos temas. No ejecuta código, no
 
 ## Instalación
 
-Desde el archivo `.vsix`:
+1. Entrá a [Releases](https://github.com/negrip/gx-syntax/releases/latest) y descargá el archivo `gx-syntax-<versión>.vsix`.
+2. Instalalo desde la terminal:
 
 ```powershell
 code --install-extension gx-syntax-<versión>.vsix --force
 ```
+
+Para actualizar, repetí los pasos con el `.vsix` de la versión nueva.
 
 Luego ejecutar **Developer: Reload Window**. También se puede instalar desde la vista de Extensiones: menú `...` → **Install from VSIX...**.
 
