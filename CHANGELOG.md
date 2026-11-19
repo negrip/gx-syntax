@@ -2,6 +2,15 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versionado semántico.
 
+## [0.3.0]
+
+### Agregado
+- Comando **Nuevo objeto GeneXus...** (menú contextual del Explorador y paleta de comandos) con plantillas para Transaction, Procedure, WebPanel, WebComponent, DataProvider, SDT, Domain, API y MasterPage.
+- Las plantillas de DataProvider y Domain dejan vacías las propiedades que el usuario debe completar (`Output`, `Collection`, `CollectionName`, `DataType`, `Length`, `Decimals`); DataProvider incluye `MainProgram = "True"`.
+- Cada plantilla incluye al inicio un comentario que avisa que es un ejemplo y que hay que verificar los campos.
+- Plantilla **Data Selector**; la gramática reconoce `#Parameters` (como declaraciones, con `&`), `#Orders` y `#DefinedBy`.
+- Snippets de código GeneXus (`if`, `foreach`, `docase`, `event`, `sub`, `parm`, secciones `#...`, etc.).
+
 ## [0.2.1]
 
 ### Agregado

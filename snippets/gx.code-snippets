@@ -1,0 +1,127 @@
+{
+	"If / Else": {
+		"prefix": "if",
+		"body": ["If ${1:condition}", "\t$0", "Else", "\t", "EndIf"],
+		"description": "If ... Else ... EndIf"
+	},
+	"For Each": {
+		"prefix": "foreach",
+		"body": ["For Each", "\t$0", "EndFor"],
+		"description": "For Each ... EndFor"
+	},
+	"For Each Order Where": {
+		"prefix": "foreachw",
+		"body": ["For Each", "\tOrder ${1:Attribute}", "\tWhere ${2:Attribute} ${3:=} ${4:&variable}", "\t$0", "EndFor"],
+		"description": "For Each con Order y Where"
+	},
+	"For Each Defined By": {
+		"prefix": "foreachd",
+		"body": ["For Each", "\tDefined By ${1:Attribute}", "\t$0", "EndFor"],
+		"description": "For Each ... Defined By"
+	},
+	"For In (colección)": {
+		"prefix": "forin",
+		"body": ["For &${1:item} In &${2:collection}", "\t$0", "EndFor"],
+		"description": "For &item In &collection"
+	},
+	"For (contador)": {
+		"prefix": "forto",
+		"body": ["For &${1:i} = ${2:1} To ${3:10}", "\t$0", "EndFor"],
+		"description": "For &i = 1 To N"
+	},
+	"Do Case": {
+		"prefix": "docase",
+		"body": ["Do Case", "\tCase ${1:condition}", "\t\t$0", "\tOtherwise", "\t\t", "EndCase"],
+		"description": "Do Case ... EndCase"
+	},
+	"Do While": {
+		"prefix": "dowhile",
+		"body": ["Do While ${1:condition}", "\t$0", "EndDo"],
+		"description": "Do While ... EndDo"
+	},
+	"Event": {
+		"prefix": "event",
+		"body": ["Event ${1:Start}", "\t$0", "EndEvent"],
+		"description": "Event ... EndEvent"
+	},
+	"Event 'usuario'": {
+		"prefix": "eventu",
+		"body": ["Event '${1:Name}'", "\t$0", "EndEvent"],
+		"description": "Evento definido por el usuario"
+	},
+	"Sub": {
+		"prefix": "sub",
+		"body": ["Sub '${1:Name}'", "\t$0", "EndSub"],
+		"description": "Subrutina"
+	},
+	"Do subrutina": {
+		"prefix": "do",
+		"body": ["Do '${1:Name}'"],
+		"description": "Llamar a una subrutina"
+	},
+	"New ... EndNew": {
+		"prefix": "new",
+		"body": ["New", "\t${1:Attribute} = ${2:&variable}", "EndNew"],
+		"description": "New ... EndNew (insertar registro)"
+	},
+	"Msg": {
+		"prefix": "msg",
+		"body": ["Msg(${1:\"mensaje\"})"],
+		"description": "Mostrar un mensaje"
+	},
+	"Commit": {
+		"prefix": "commit",
+		"body": ["Commit"],
+		"description": "Commit"
+	},
+	"Rollback": {
+		"prefix": "rollback",
+		"body": ["Rollback"],
+		"description": "Rollback"
+	},
+	"Error rule": {
+		"prefix": "error",
+		"body": ["Error(${1:\"mensaje\"}) if ${2:condition};"],
+		"description": "Regla Error"
+	},
+	"parm rule": {
+		"prefix": "parm",
+		"body": ["parm(in:&${1:in1}, out:&${2:out1});"],
+		"description": "Regla parm"
+	},
+	"Sección #Rules": {
+		"prefix": "#rules",
+		"body": ["#Rules", "\t$0", "#End"],
+		"description": "Sección #Rules"
+	},
+	"Sección #Events": {
+		"prefix": "#events",
+		"body": ["#Events", "\t$0", "#End"],
+		"description": "Sección #Events"
+	},
+	"Sección #Variables": {
+		"prefix": "#variables",
+		"body": ["#Variables", "\t${1:Name} [ DataType = '${2:VarChar(100)}' ]", "#End"],
+		"description": "Sección #Variables"
+	},
+	"Sección #Properties": {
+		"prefix": "#properties",
+		"body": ["#Properties", "\tName = \"${1:Name}\"", "#End"],
+		"description": "Sección #Properties"
+	},
+	"Variable": {
+		"prefix": "var",
+		"body": ["${1:Name} [ DataType = '${2:VarChar(100)}' ]"],
+		"description": "Declaración de variable"
+	},
+	"Atributo": {
+		"prefix": "att",
+		"body": ["${1:Name} [ DataType = '${2:VarChar(100)}' ]"],
+		"description": "Declaración de atributo"
+	},
+	"Atributo clave": {
+		"prefix": "attkey",
+		"body": ["${1:Name}* [ DataType = '${2:Numeric(10.0)}', Autonumber = '${3:True}' ]"],
+		"description": "Atributo clave primaria"
+	}
+}

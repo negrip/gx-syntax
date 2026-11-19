@@ -2,7 +2,7 @@
   "name": "gx-syntax",
   "displayName": "GX Syntax",
   "description": "Syntax highlighting para objetos GeneXus en archivos .gx (Procedure, Transaction, WebPanel, DataProvider, SDT, Table, etc.).",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "negrip",
   "license": "MIT",
   "repository": {
@@ -60,6 +60,33 @@
           "text.html.markdown": "markdown"
         }
       }
+    ],
+    "commands": [
+      {
+        "command": "gxSyntax.newObject",
+        "title": "Nuevo objeto GeneXus...",
+        "category": "GX"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "gxSyntax.newObject",
+          "when": "explorerResourceIsFolder",
+          "group": "2_workspace@1"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "gxSyntax.newObject"
+        }
+      ]
+    },
+    "snippets": [
+      {
+        "language": "genexus-gx",
+        "path": "./snippets/gx.code-snippets"
+      }
     ]
   },
   "scripts": {
@@ -71,5 +98,6 @@
     "@vscode/vsce": "^3.0.0",
     "vscode-oniguruma": "^2.0.1",
     "vscode-textmate": "^9.1.0"
-  }
+  },
+  "main": "./src/extension.js"
 }

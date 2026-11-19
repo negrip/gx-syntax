@@ -83,7 +83,7 @@
     },
 
     "section-variables": {
-      "begin": "(?i)^\\s*(#)(variables)\\s*$",
+      "begin": "(?i)^\\s*(#)(variables|parameters)\\s*$",
       "beginCaptures": {
         "1": { "name": "punctuation.definition.section.gx" },
         "2": { "name": "keyword.control.section.gx" }
@@ -101,7 +101,7 @@
     },
 
     "section-code": {
-      "begin": "(?i)^\\s*(#)(rules|events|conditions|source|code|formulas?|calculations?)\\s*$",
+      "begin": "(?i)^\\s*(#)(rules|events|conditions|orders|definedby|source|code|formulas?|calculations?)\\s*$",
       "beginCaptures": {
         "1": { "name": "punctuation.definition.section.gx" },
         "2": { "name": "keyword.control.section.gx" }
@@ -154,7 +154,7 @@
 
     "declaration": {
       "comment": "Atributo o variable declarada: Nombre, Nombre*, Nombre! o Nombre [ ... ]",
-      "match": "^\\s*([A-Za-z_]\\w*)([*!]?)(?=\\s*(?:\\[|\\{|$))",
+      "match": "^\\s*(&?[A-Za-z_]\\w*)([*!]?)(?=\\s*(?:\\[|\\{|$))",
       "captures": {
         "1": { "name": "variable.other.declaration.gx" },
         "2": { "name": "keyword.operator.key-marker.gx" }

@@ -1,0 +1,24 @@
+DataSelector ProductSelector
+{
+	#Parameters
+		&ProductID [ Description = 'Product Id', DataType = 'Attribute:ProductID' ]
+
+		&ProductName [ Description = 'Product Name', DataType = 'Attribute:ProductName' ]
+	#End
+
+	#Conditions
+		ProductID = &ProductID when not &ProductID.IsEmpty();
+	#End
+
+	#Orders
+		ProductName;
+	#End
+
+	#DefinedBy
+		ProductName
+	#End
+
+	#Properties
+		Name = "ProductSelector"
+	#End
+}

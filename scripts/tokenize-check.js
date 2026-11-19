@@ -38,6 +38,17 @@ async function tokenize(file) {
 // [archivo, texto del token, fragmento de scope esperado]
 // Los delimitadores de strings y comentarios son tokens aparte: 'abc' produce el token abc.
 const EXPECT = [
+  // ProductSelector.gx (DataSelector)
+  ['ProductSelector.gx', 'DataSelector', 'storage.type.class'],
+  ['ProductSelector.gx', 'Parameters', 'keyword.control.section'],
+  ['ProductSelector.gx', '&ProductID', 'variable.other.declaration'],
+  ['ProductSelector.gx', 'ProductID', 'variable.other.constant.attribute'],
+  ['ProductSelector.gx', '&ProductID', 'variable.other'],
+  ['ProductSelector.gx', 'when', 'keyword.control'],
+  ['ProductSelector.gx', 'Orders', 'keyword.control.section'],
+  ['ProductSelector.gx', 'ProductName', 'variable.other.constant.attribute'],
+  ['ProductSelector.gx', 'DefinedBy', 'keyword.control.section'],
+
   // Customer.gx (Transaction)
   ['Customer.gx', 'Transaction', 'storage.type.class'],
   ['Customer.gx', 'Customer', 'entity.name.type.class'],
