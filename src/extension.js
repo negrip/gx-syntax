@@ -3,6 +3,7 @@ const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
 const { TEMPLATES } = require('./templates');
+const { parseSections } = require('./sections');
 
 const NAME_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
@@ -50,8 +51,77 @@ async function newObject(uri) {
   await vscode.window.showTextDocument(doc);
 }
 
+// ---- Secciones: Outline / Ctrl+Shift+O, "Ir a sección" y "Volver" ----
+
+const range = (doc, a, b) => new vscode.Range(a, 0, b, doc.lineAt(Math.min(b, doc.lineCount - 1)).text.length);
+
+const symbolProvider = {
+  provideDocumentSymbols(doc) {
+    return parseSections(doc.getText()).map((sec) => {
+      const top = new vscode.DocumentSymbol(
+        `#${sec.name}`, '', vscode.SymbolKind.Namespace,
+        range(doc, sec.startLine, sec.endLine), range(doc, sec.startLine, sec.startLine)
+      );
+      top.children = sec.children.map((c) =>
+        new vscode.DocumentSymbol(
+          c.name, c.kind, c.kind === 'Event' ? vscode.SymbolKind.Event : vscode.SymbolKind.Function,
+          range(doc, c.startLine, c.endLine), range(doc, c.startLine, c.startLine)
+        )
+      );
+      return top;
+    });
+  },
+};
+
+// Pila propia de posiciones: VS Code no registra en su historial los saltos cortos.
+const backStack = [];
+const MAX_BACK = 50;
+
+async function goToSection() {
+  const editor = vscode.window.activeTextEditor;
+  if (!editor || editor.document.languageId !== 'genexus-gx') {
+    vscode.window.showInformationMessage('GX: abrí un archivo .gx para ir a una sección.');
+    return;
+  }
+  const items = [];
+  for (const sec of parseSections(editor.document.getText())) {
+    items.push({ label: `#${sec.name}`, description: `línea ${sec.startLine + 1}`, line: sec.startLine });
+    for (const c of sec.children) {
+      items.push({ label: `    ${c.kind} ${c.name}`, description: `línea ${c.startLine + 1}`, line: c.startLine });
+    }
+  }
+  if (!items.length) {
+    vscode.window.showInformationMessage('GX: este archivo no tiene secciones (#Rules, #Events, ...).');
+    return;
+  }
+  const pick = await vscode.window.showQuickPick(items, { title: 'Ir a sección', placeHolder: 'Sección, Event o Sub' });
+  if (!pick) return;
+  backStack.push({ uri: editor.document.uri, position: editor.selection.active });
+  if (backStack.length > MAX_BACK) backStack.shift();
+  const pos = new vscode.Position(pick.line, 0);
+  editor.selection = new vscode.Selection(pos, pos);
+  editor.revealRange(new vscode.Range(pos, pos), vscode.TextEditorRevealType.AtTop);
+}
+
+async function goBack() {
+  const prev = backStack.pop();
+  if (!prev) {
+    await vscode.commands.executeCommand('workbench.action.navigateBack');
+    return;
+  }
+  const doc = await vscode.workspace.openTextDocument(prev.uri);
+  const editor = await vscode.window.showTextDocument(doc);
+  editor.selection = new vscode.Selection(prev.position, prev.position);
+  editor.revealRange(new vscode.Range(prev.position, prev.position), vscode.TextEditorRevealType.InCenterIfOutsideViewport);
+}
+
 function activate(context) {
-  context.subscriptions.push(vscode.commands.registerCommand('gxSyntax.newObject', newObject));
+  context.subscriptions.push(
+    vscode.commands.registerCommand('gxSyntax.newObject', newObject),
+    vscode.commands.registerCommand('gxSyntax.goToSection', goToSection),
+    vscode.commands.registerCommand('gxSyntax.goBack', goBack),
+    vscode.languages.registerDocumentSymbolProvider({ language: 'genexus-gx' }, symbolProvider)
+  );
 }
 
 function deactivate() {}

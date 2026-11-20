@@ -2,6 +2,13 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versionado semántico.
 
+## [0.4.0]
+
+### Agregado
+- **Ir a sección...** (`Ctrl+Alt+S`): lista secciones, `Event` y `Sub` del `.gx` y salta a la elegida.
+- **Volver a la posición anterior** (`Ctrl+Alt+B`), con pila propia de saltos.
+- Las secciones y los `Event`/`Sub` aparecen en el Outline, las migas de pan y `Ctrl+Shift+O`.
+
 ## [0.3.0]
 
 ### Agregado

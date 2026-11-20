@@ -2,7 +2,7 @@
   "name": "gx-syntax",
   "displayName": "GX Syntax",
   "description": "Syntax highlighting para objetos GeneXus en archivos .gx (Procedure, Transaction, WebPanel, DataProvider, SDT, Table, etc.).",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "publisher": "negrip",
   "license": "MIT",
   "repository": {
@@ -66,6 +66,16 @@
         "command": "gxSyntax.newObject",
         "title": "Nuevo objeto GeneXus...",
         "category": "GX"
+      },
+      {
+        "command": "gxSyntax.goToSection",
+        "title": "Ir a sección...",
+        "category": "GX"
+      },
+      {
+        "command": "gxSyntax.goBack",
+        "title": "Volver a la posición anterior",
+        "category": "GX"
       }
     ],
     "menus": {
@@ -79,6 +89,21 @@
       "commandPalette": [
         {
           "command": "gxSyntax.newObject"
+        },
+        {
+          "command": "gxSyntax.goToSection",
+          "when": "editorLangId == genexus-gx"
+        },
+        {
+          "command": "gxSyntax.goBack",
+          "when": "editorLangId == genexus-gx"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "gxSyntax.goToSection",
+          "when": "editorLangId == genexus-gx",
+          "group": "navigation@1"
         }
       ]
     },
@@ -87,10 +112,22 @@
         "language": "genexus-gx",
         "path": "./snippets/gx.code-snippets"
       }
+    ],
+    "keybindings": [
+      {
+        "command": "gxSyntax.goToSection",
+        "key": "ctrl+alt+s",
+        "when": "editorLangId == genexus-gx"
+      },
+      {
+        "command": "gxSyntax.goBack",
+        "key": "ctrl+alt+b",
+        "when": "editorLangId == genexus-gx"
+      }
     ]
   },
   "scripts": {
-    "test": "node scripts/tokenize-check.js",
+    "test": "node scripts/tokenize-check.js && node scripts/sections-check.js",
     "themes": "node scripts/build-themes.js",
     "package": "vsce package"
   },
