@@ -16,6 +16,7 @@ Es declarativa: solo una gramática TextMate y dos temas. No ejecuta código, no
 - **Temas** `GX Dark` y `GX Light` (opcionales).
 - **Nuevo objeto:** clic derecho en una carpeta del Explorador → *Nuevo objeto GeneXus...* (o `GX: Nuevo objeto GeneXus...` en la paleta de comandos). Elegís el tipo (Transacción, Procedure, Web Panel, Web Component, Data Provider, SDT, Domain, API, Master Page) y el nombre, y crea el `.gx` desde una plantilla.
 - **Navegación por secciones:** `Ctrl+Alt+S` (o clic derecho → *Ir a sección...*) lista las secciones, `Event` y `Sub` del archivo y salta a la elegida; `Ctrl+Alt+B` vuelve a donde estabas. Las secciones también aparecen en el **Outline**, en las migas de pan y con `Ctrl+Shift+O`.
+- **Autocompletado** de funciones y métodos de GeneXus: se insertan con paréntesis (`&x.SetEmpty()`); si llevan parámetros, el cursor queda dentro. Al escribir `&` sugiere las variables del objeto (declaradas, usadas y del sistema) y, fuera de `&`, sus atributos.
 - **Snippets** de sintaxis GeneXus: `if`, `foreach`, `forin`, `docase`, `event`, `sub`, `new`, `parm`, `#rules`, `#variables`, etc.
 
 ## Instalación

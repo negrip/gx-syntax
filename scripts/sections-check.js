@@ -28,5 +28,21 @@ if (open.length !== 1 || open[0].children.length !== 1) { fail++; console.log('F
 const doc = parseSections('Procedure P\n{\n#Documentation\nEvent Start de ejemplo\n#End\n}');
 if (doc.length !== 1 || doc[0].children.length !== 0) { fail++; console.log('FALLA: #Documentation'); }
 
+// Símbolos para el autocompletado
+const { collectSymbols } = require('../src/symbols');
+const src = [
+  'WebPanel P', '{',
+  '\t#Rules', '\t\tparm(out:&pCountryId);', '\t\t&pC', '\t#End',
+  '\t#Variables', "\t\tcName [ DataType = 'VarChar(64)' ]", '\t#End',
+  '}',
+].join('\n');
+const sym = collectSymbols(src, { line: 4, start: 2, end: 5 });
+const vn = [...sym.variables.keys()];
+for (const n of ['pCountryId', 'cName', 'Today', 'Pgmname']) if (!vn.includes(n)) { fail++; console.log('FALLA: falta variable ' + n); }
+if (vn.includes('pC')) { fail++; console.log('FALLA: se sugiere a sí misma'); }
+if (sym.variables.get('cName').detail !== 'VarChar(64)') { fail++; console.log('FALLA: detalle de tipo'); }
+const cust = collectSymbols(read('Customer.gx'));
+if (![...cust.attributes.keys()].includes('CustomerId')) { fail++; console.log('FALLA: atributos'); }
+
 if (fail) process.exit(1);
-console.log(`OK: ${CASES.length + 2} verificaciones de secciones`);
+console.log(`OK: ${CASES.length + 6} verificaciones de secciones y símbolos`);

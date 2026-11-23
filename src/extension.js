@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const { TEMPLATES } = require('./templates');
 const { parseSections } = require('./sections');
+const catalog = require('./catalog');
+const { collectSymbols } = require('./symbols');
 
 const NAME_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
@@ -115,11 +117,58 @@ async function goBack() {
   editor.revealRange(new vscode.Range(prev.position, prev.position), vscode.TextEditorRevealType.InCenterIfOutsideViewport);
 }
 
+// ---- Autocompletado: métodos y funciones con paréntesis ----
+
+function callItem(entry, kind) {
+  const item = new vscode.CompletionItem(entry.name, kind);
+  item.detail = entry.sig;
+  // Sin parámetros: deja el cursor después de "()"; con parámetros: dentro de "(...)".
+  item.insertText = new vscode.SnippetString(entry.noArgs ? `${entry.name}()` : `${entry.name}($0)`);
+  item.sortText = `0_${entry.name}`;
+  return item;
+}
+
+function symbolItem(name, info, kind, sortPrefix) {
+  const item = new vscode.CompletionItem(name, kind);
+  if (info.detail) item.detail = info.detail;
+  item.sortText = `${sortPrefix}_${name.toLowerCase()}`;
+  return item;
+}
+
+const completionProvider = {
+  provideCompletionItems(doc, pos) {
+    const before = doc.lineAt(pos).text.slice(0, pos.character);
+    const amp = /&([A-Za-z_]w*)?$/.exec(before);
+    if (amp) {
+      // Después de "&": variables declaradas, usadas con & y del sistema.
+      const partial = amp[1] || '';
+      const { variables } = collectSymbols(doc.getText(), { line: pos.line, start: pos.character - partial.length, end: pos.character });
+      return [...variables].map(([n, i]) =>
+        symbolItem(n, i, vscode.CompletionItemKind.Variable, i.system ? '1' : '0')
+      );
+    }
+    if (/.s*[A-Za-z_]*$/.test(before)) {
+      return [
+        ...catalog.METHODS.map((m) => callItem(m, vscode.CompletionItemKind.Method)),
+        ...catalog.PROPERTIES.map((p) => new vscode.CompletionItem(p, vscode.CompletionItemKind.Property)),
+      ];
+    }
+    const partial = /[A-Za-z_]w*$/.exec(before);
+    const len = partial ? partial[0].length : 0;
+    const { attributes } = collectSymbols(doc.getText(), { line: pos.line, start: pos.character - len, end: pos.character });
+    return [
+      ...[...attributes].map(([n, i]) => symbolItem(n, i, vscode.CompletionItemKind.Field, '0')),
+      ...catalog.FUNCTIONS.map((f) => callItem(f, vscode.CompletionItemKind.Function)),
+    ];
+  },
+};
+
 function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('gxSyntax.newObject', newObject),
     vscode.commands.registerCommand('gxSyntax.goToSection', goToSection),
     vscode.commands.registerCommand('gxSyntax.goBack', goBack),
+    vscode.languages.registerCompletionItemProvider({ language: 'genexus-gx' }, completionProvider, '.', '&'),
     vscode.languages.registerDocumentSymbolProvider({ language: 'genexus-gx' }, symbolProvider)
   );
 }

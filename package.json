@@ -2,7 +2,7 @@
   "name": "gx-syntax",
   "displayName": "GX Syntax",
   "description": "Syntax highlighting para objetos GeneXus en archivos .gx (Procedure, Transaction, WebPanel, DataProvider, SDT, Table, etc.).",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "publisher": "negrip",
   "license": "MIT",
   "repository": {

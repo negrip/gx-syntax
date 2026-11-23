@@ -2,6 +2,17 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versionado semántico.
 
+## [0.6.0]
+
+### Agregado
+- Autocompletado de **variables** al escribir `&`: las declaradas en `#Variables`/`#Parameters`, las usadas con `&` en el código (por ejemplo las de `parm`) y las del sistema (`Today`, `Time`, `Pgmname`, `Pgmdesc`), con su tipo cuando está declarado.
+- Autocompletado de **atributos** declarados en el objeto (Transaction, SDT, etc.).
+
+## [0.5.0]
+
+### Agregado
+- **Autocompletado** de funciones (`Trim`, `Today`, `Iif`, ...) y métodos (`.SetEmpty()`, `.IsEmpty()`, `.Add()`, ...). Al aceptar la sugerencia se inserta con paréntesis; si lleva parámetros, el cursor queda dentro. Después de `.` se ofrecen métodos; en otro lugar, funciones.
+
 ## [0.4.0]
 
 ### Agregado
