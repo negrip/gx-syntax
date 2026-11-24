@@ -17,6 +17,7 @@ Es declarativa: solo una gramática TextMate y dos temas. No ejecuta código, no
 - **Nuevo objeto:** clic derecho en una carpeta del Explorador → *Nuevo objeto GeneXus...* (o `GX: Nuevo objeto GeneXus...` en la paleta de comandos). Elegís el tipo (Transacción, Procedure, Web Panel, Web Component, Data Provider, SDT, Domain, API, Master Page) y el nombre, y crea el `.gx` desde una plantilla.
 - **Navegación por secciones:** `Ctrl+Alt+S` (o clic derecho → *Ir a sección...*) lista las secciones, `Event` y `Sub` del archivo y salta a la elegida; `Ctrl+Alt+B` vuelve a donde estabas. Las secciones también aparecen en el **Outline**, en las migas de pan y con `Ctrl+Shift+O`.
 - **Autocompletado** de funciones y métodos de GeneXus: se insertan con paréntesis (`&x.SetEmpty()`); si llevan parámetros, el cursor queda dentro. Al escribir `&` sugiere las variables del objeto (declaradas, usadas y del sistema) y, fuera de `&`, sus atributos.
+- **Ayuda de firma:** al escribir `(` o `,` muestra los parámetros con su tipo y el tipo de retorno de la función, y resalta el parámetro activo. Cubre 36 funciones de uso frecuente, con enlace a la wiki de GeneXus.
 - **Snippets** de sintaxis GeneXus: `if`, `foreach`, `forin`, `docase`, `event`, `sub`, `new`, `parm`, `#rules`, `#variables`, etc.
 
 ## Instalación
@@ -54,7 +55,7 @@ Los archivos `.gx` se asocian solos al lenguaje **GeneXus (GX)** (id `genexus-gx
 ```
 syntaxes/gx.tmLanguage.json   gramática TextMate
 language-configuration.json   comentarios, paréntesis, plegado
-src/                          extensión: comandos (extension.js), plantillas (templates.js), secciones (sections.js)
+src/                          extensión: comandos (extension.js), plantillas, secciones, símbolos, catálogo y firmas de funciones
 snippets/                     snippets de código
 themes/                       temas generados (no editar a mano)
 scripts/build-themes.js       paleta única y generador de temas

@@ -6,6 +6,7 @@ const { TEMPLATES } = require('./templates');
 const { parseSections } = require('./sections');
 const catalog = require('./catalog');
 const { collectSymbols } = require('./symbols');
+const { findCall, signatureFor } = require('./signature');
 
 const NAME_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
@@ -122,9 +123,14 @@ async function goBack() {
 function callItem(entry, kind) {
   const item = new vscode.CompletionItem(entry.name, kind);
   item.detail = entry.sig;
+  if (entry.typed && entry.typed.url) {
+    item.documentation = new vscode.MarkdownString(`[Wiki de GeneXus](${entry.typed.url})`);
+  }
   // Sin parámetros: deja el cursor después de "()"; con parámetros: dentro de "(...)".
   item.insertText = new vscode.SnippetString(entry.noArgs ? `${entry.name}()` : `${entry.name}($0)`);
   item.sortText = `0_${entry.name}`;
+  // Con parámetros, abre la ayuda de firma apenas se acepta la sugerencia.
+  if (!entry.noArgs) item.command = { command: 'editor.action.triggerParameterHints', title: '' };
   return item;
 }
 
@@ -138,7 +144,7 @@ function symbolItem(name, info, kind, sortPrefix) {
 const completionProvider = {
   provideCompletionItems(doc, pos) {
     const before = doc.lineAt(pos).text.slice(0, pos.character);
-    const amp = /&([A-Za-z_]w*)?$/.exec(before);
+    const amp = /&([A-Za-z_]\w*)?$/.exec(before);
     if (amp) {
       // Después de "&": variables declaradas, usadas con & y del sistema.
       const partial = amp[1] || '';
@@ -147,13 +153,13 @@ const completionProvider = {
         symbolItem(n, i, vscode.CompletionItemKind.Variable, i.system ? '1' : '0')
       );
     }
-    if (/.s*[A-Za-z_]*$/.test(before)) {
+    if (/\.\s*[A-Za-z_]*$/.test(before)) {
       return [
         ...catalog.METHODS.map((m) => callItem(m, vscode.CompletionItemKind.Method)),
         ...catalog.PROPERTIES.map((p) => new vscode.CompletionItem(p, vscode.CompletionItemKind.Property)),
       ];
     }
-    const partial = /[A-Za-z_]w*$/.exec(before);
+    const partial = /[A-Za-z_]\w*$/.exec(before);
     const len = partial ? partial[0].length : 0;
     const { attributes } = collectSymbols(doc.getText(), { line: pos.line, start: pos.character - len, end: pos.character });
     return [
@@ -163,12 +169,31 @@ const completionProvider = {
   },
 };
 
+// ---- Ayuda de firma: parámetros y tipos al escribir "(" o "," ----
+
+const signatureProvider = {
+  provideSignatureHelp(doc, pos) {
+    const text = doc.getText(new vscode.Range(new vscode.Position(0, 0), pos));
+    const sig = signatureFor(findCall(text));
+    if (!sig) return undefined;
+    const info = new vscode.SignatureInformation(sig.label);
+    info.parameters = sig.parameters.map((p) => new vscode.ParameterInformation(p));
+    if (sig.url) info.documentation = new vscode.MarkdownString(`[Wiki de GeneXus](${sig.url})`);
+    const help = new vscode.SignatureHelp();
+    help.signatures = [info];
+    help.activeSignature = 0;
+    help.activeParameter = sig.activeParameter;
+    return help;
+  },
+};
+
 function activate(context) {
   context.subscriptions.push(
     vscode.commands.registerCommand('gxSyntax.newObject', newObject),
     vscode.commands.registerCommand('gxSyntax.goToSection', goToSection),
     vscode.commands.registerCommand('gxSyntax.goBack', goBack),
     vscode.languages.registerCompletionItemProvider({ language: 'genexus-gx' }, completionProvider, '.', '&'),
+    vscode.languages.registerSignatureHelpProvider({ language: 'genexus-gx' }, signatureProvider, { triggerCharacters: ['(', ','], retriggerCharacters: [','] }),
     vscode.languages.registerDocumentSymbolProvider({ language: 'genexus-gx' }, symbolProvider)
   );
 }

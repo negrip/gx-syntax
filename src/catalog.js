@@ -26,7 +26,6 @@ YMDHMStoT(<year>, <month>, <day>[, <hour>, <minute>, <second>])
 DoW(<expression>)
 EoM(<expression>)
 CMonth(<expression>[, <language>])
-AddDays(<expression>, <quantity>)
 AddMth(<expression>, <quantity>)
 AddYr(<expression>, <quantity>)
 TAdd(<expression>, <seconds>)
@@ -80,6 +79,8 @@ Commit()
 Rollback()
 `;
 
+// Los métodos equivalentes a funciones (Length, TrimStart, IndexOf, ...) vienen de la
+// documentación de GeneXus (nexa, common-functions). La wiki documenta AddDays solo como método.
 const METHODS = `
 SetEmpty()
 IsEmpty()
@@ -92,6 +93,35 @@ Year()
 Hour()
 Minute()
 Second()
+Length()
+Trim()
+TrimStart()
+TrimEnd()
+ToUpper()
+ToLower()
+Substring(<start>[, <length>])
+Replace(<old>, <new>)
+PadLeft(<length>[, <fill-char>])
+PadRight(<length>[, <fill-char>])
+ToNumeric()
+ToFormattedString()
+HTMLClean()
+Round(<decimals>)
+RoundToEven(<decimals>)
+Int()
+Truncate()
+Age([<reference-expression>])
+DayOfWeek()
+EndOfMonth()
+MonthName([<language>])
+AddDays(<quantity>)
+AddMonths(<quantity>)
+AddYears(<quantity>)
+AddSeconds(<seconds>)
+Difference(<expression>)
+GetOldValue()
+IsNull()
+SetNull()
 IsMatch(<regex>)
 Matches(<regex>)
 ReplaceRegEx(<regex>, <expr>)
@@ -100,8 +130,8 @@ Add(<item>)
 AddRange(<items>[, <index>])
 Clear()
 Clone()
-IndexOf(<item>)
-LastIndexOf(<item>)
+IndexOf(<substr or item>[, <start>])
+LastIndexOf(<substr or item>[, <start>])
 Item(<index>)
 Remove(<index>)
 RemoveRange(<index>[, <count>])
@@ -115,10 +145,53 @@ FromXml(<xml>)
 
 const PROPERTIES = ['Count'];
 
-const parse = (block) =>
-  block.trim().split('\n').map((sig) => {
-    const i = sig.indexOf('(');
-    return { name: sig.slice(0, i), sig, noArgs: sig.slice(i) === '()' };
-  });
+const { SIGNATURES } = require('./signatures');
 
-module.exports = { FUNCTIONS: parse(FUNCTIONS), METHODS: parse(METHODS), PROPERTIES };
+// "Name(<a>[, <b>])" -> { name, sig, noArgs, params: [{ name, optional }] } (sin tipos)
+function parseLine(sig) {
+  const open = sig.indexOf('(');
+  const inner = sig.slice(open + 1, sig.lastIndexOf(')'));
+  const params = inner
+    .replace(/\[\s*,/g, ',~')
+    .replace(/[[\]]/g, '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .map((s) => ({ name: s.replace(/^~/, '').replace(/[<>]/g, '').trim(), optional: s.startsWith('~') }));
+  // "Name([<a>])": el corchete abre sin coma delante
+  if (/^\[/.test(inner.trim()) && params.length) params[0].optional = true;
+  return { name: sig.slice(0, open), sig, noArgs: inner.trim() === '', params };
+}
+
+// Firma legible con tipos: "StrSearch(String: Character, SubString: Character, [Start: Numeric]): Numeric"
+const paramLabel = (q) => {
+  const body = q.type ? `${q.name}: ${q.type}` : q.name;
+  const rest = q.rest ? '...' : '';
+  return q.optional ? `[${body}${rest}]` : `${body}${rest}`;
+};
+const signatureLabel = (s) =>
+  `${s.name}(${s.params.map(paramLabel).join(', ')})${s.returns ? `: ${s.returns}` : ''}`;
+
+const lines = (block) => block.trim().split('\n').map(parseLine);
+
+// Funciones: las que tienen firma tipada (wiki) reemplazan a la entrada genérica.
+const typed = new Map(SIGNATURES.map((s) => [s.name.toLowerCase(), s]));
+const FUNCTIONS_LIST = lines(FUNCTIONS).map((f) => {
+  const t = typed.get(f.name.toLowerCase());
+  return t ? { ...f, sig: signatureLabel(t), noArgs: t.params.length === 0, typed: t } : f;
+});
+// Funciones tipadas que no estaban en el catálogo genérico
+for (const t of SIGNATURES) {
+  if (!FUNCTIONS_LIST.some((f) => f.name.toLowerCase() === t.name.toLowerCase())) {
+    FUNCTIONS_LIST.push({ name: t.name, sig: signatureLabel(t), noArgs: t.params.length === 0, params: [], typed: t });
+  }
+}
+
+module.exports = {
+  FUNCTIONS: FUNCTIONS_LIST,
+  METHODS: lines(METHODS),
+  PROPERTIES,
+  SIGNATURES,
+  signatureLabel,
+  paramLabel,
+};

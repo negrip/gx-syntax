@@ -2,7 +2,7 @@
   "name": "gx-syntax",
   "displayName": "GX Syntax",
   "description": "Syntax highlighting para objetos GeneXus en archivos .gx (Procedure, Transaction, WebPanel, DataProvider, SDT, Table, etc.).",
-  "version": "0.6.0",
+  "version": "0.7.1",
   "publisher": "negrip",
   "license": "MIT",
   "repository": {
@@ -127,7 +127,7 @@
     ]
   },
   "scripts": {
-    "test": "node scripts/tokenize-check.js && node scripts/sections-check.js",
+    "test": "node scripts/tokenize-check.js && node scripts/sections-check.js && node scripts/signature-check.js && node scripts/completion-check.js",
     "themes": "node scripts/build-themes.js",
     "package": "vsce package"
   },

@@ -2,6 +2,23 @@
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Versionado semántico.
 
+## [0.7.1]
+
+### Corregido
+- Al escribir una palabra suelta (por ejemplo `Str`) el autocompletado ofrecía solo métodos y no las funciones (`StrSearch`...): unas expresiones regulares del proveedor estaban mal escritas.
+- Las sugerencias de variables y atributos fallaban con un error interno.
+- Se agregó una prueba del proveedor de autocompletado para detectar estas regresiones.
+
+## [0.7.0]
+
+### Agregado
+- **Ayuda de firma** al escribir `(` o `,`: muestra los parámetros con su tipo y el tipo de retorno (por ejemplo `StrSearch(String: Character, SubString: Character, [Start: Numeric]): Numeric`) y resalta el parámetro activo. Cubre 36 funciones de uso frecuente (texto, fecha y hora, numéricas, `Iif`, `IsNull`, `Link`...), con enlace a su página de la wiki de GeneXus. Los métodos muestran sus parámetros sin tipo.
+- Más métodos equivalentes a funciones en el autocompletado: `Length`, `TrimStart`, `TrimEnd`, `ToUpper`, `ToLower`, `Substring`, `Replace`, `PadLeft`, `PadRight`, `AddDays`, `AddMonths`, `AddYears`, `Truncate`, entre otros.
+
+### Cambiado
+- `AddDays` se ofrece solo como método (`&fecha.AddDays(n)`), porque la wiki no lo documenta como función.
+- `Trunc` muestra dos parámetros (valor y decimales), como en la wiki.
+
 ## [0.6.0]
 
 ### Agregado
