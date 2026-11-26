@@ -12,13 +12,26 @@ const vscode = {
   MarkdownString: class { constructor(value) { this.value = value; } },
   CompletionItemKind: { Method: 'method', Property: 'property', Variable: 'variable', Field: 'field', Function: 'function' },
   Range: class {}, Position: class {}, Selection: class {}, TextEditorRevealType: {}, SymbolKind: {},
-  commands: { registerCommand: () => ({}) },
+  EventEmitter: class { constructor() { this.event = () => ({}); } fire() {} },
+  TreeItem: class {}, ThemeIcon: class {}, Uri: { file: (f) => ({ fsPath: f }) },
+  TreeItemCollapsibleState: { None: 0, Collapsed: 1 },
+  commands: { registerCommand: () => ({}), executeCommand: async () => undefined },
   languages: {
     registerCompletionItemProvider: (_s, p) => { provider = p; return {}; },
     registerSignatureHelpProvider: () => ({}),
     registerDocumentSymbolProvider: () => ({}),
   },
-  window: {}, workspace: {},
+  window: {
+    createTreeView: () => ({ visible: false, onDidChangeVisibility: () => ({}), reveal: async () => {} }),
+    onDidChangeActiveTextEditor: () => ({}),
+  },
+  workspace: {
+    workspaceFolders: [],
+    getConfiguration: () => ({ get: (_k, d) => d }),
+    createFileSystemWatcher: () => ({ onDidCreate() {}, onDidDelete() {}, onDidChange() {}, dispose() {} }),
+    onDidChangeWorkspaceFolders: () => ({}),
+    onDidChangeConfiguration: () => ({}),
+  },
 };
 const load = Module._load;
 Module._load = function (request, ...rest) {

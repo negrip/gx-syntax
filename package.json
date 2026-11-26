@@ -2,7 +2,7 @@
   "name": "gx-syntax",
   "displayName": "GX Syntax",
   "description": "Syntax highlighting para objetos GeneXus en archivos .gx (Procedure, Transaction, WebPanel, DataProvider, SDT, Table, etc.).",
-  "version": "0.7.1",
+  "version": "0.8.3",
   "publisher": "negrip",
   "license": "MIT",
   "repository": {
@@ -76,16 +76,31 @@
         "command": "gxSyntax.goBack",
         "title": "Volver a la posición anterior",
         "category": "GX"
+      },
+      {
+        "command": "gxSyntax.searchObjects",
+        "title": "Buscar objeto...",
+        "category": "GX",
+        "icon": "$(search)"
+      },
+      {
+        "command": "gxSyntax.showTree",
+        "title": "Mostrar árbol de objetos",
+        "category": "GX"
+      },
+      {
+        "command": "gxSyntax.tree.newObject",
+        "title": "Nuevo objeto GeneXus...",
+        "category": "GX"
+      },
+      {
+        "command": "gxSyntax.tree.refresh",
+        "title": "Actualizar árbol de objetos",
+        "category": "GX",
+        "icon": "$(refresh)"
       }
     ],
     "menus": {
-      "explorer/context": [
-        {
-          "command": "gxSyntax.newObject",
-          "when": "explorerResourceIsFolder",
-          "group": "2_workspace@1"
-        }
-      ],
       "commandPalette": [
         {
           "command": "gxSyntax.newObject"
@@ -97,6 +112,22 @@
         {
           "command": "gxSyntax.goBack",
           "when": "editorLangId == genexus-gx"
+        },
+        {
+          "command": "gxSyntax.searchObjects",
+          "when": "gxSyntax.hasKb"
+        },
+        {
+          "command": "gxSyntax.tree.refresh",
+          "when": "gxSyntax.hasKb"
+        },
+        {
+          "command": "gxSyntax.showTree",
+          "when": "gxSyntax.hasKb"
+        },
+        {
+          "command": "gxSyntax.tree.newObject",
+          "when": "false"
         }
       ],
       "editor/context": [
@@ -104,6 +135,25 @@
           "command": "gxSyntax.goToSection",
           "when": "editorLangId == genexus-gx",
           "group": "navigation@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "gxSyntax.tree.newObject",
+          "when": "view == gxSyntax.tree && viewItem == gxContainerSrc",
+          "group": "navigation@1"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "gxSyntax.searchObjects",
+          "when": "view == gxSyntax.tree",
+          "group": "navigation@1"
+        },
+        {
+          "command": "gxSyntax.tree.refresh",
+          "when": "view == gxSyntax.tree",
+          "group": "navigation@2"
         }
       ]
     },
@@ -124,10 +174,210 @@
         "key": "ctrl+alt+b",
         "when": "editorLangId == genexus-gx"
       }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "gxSyntax.tree",
+          "name": "GeneXus",
+          "icon": "$(symbol-namespace)",
+          "when": "config.gxSyntax.tree.enabled && (gxSyntax.hasKb || (workbenchState == empty && editorLangId == genexus-gx))"
+        }
+      ]
+    },
+    "viewsWelcome": [
+      {
+        "view": "gxSyntax.tree",
+        "contents": "Para ver el árbol de objetos, abrí la carpeta de la KB (por ejemplo la carpeta \"src\").\n[Abrir carpeta](command:workbench.action.files.openFolder)",
+        "when": "workbenchState == empty"
+      }
+    ],
+    "configuration": {
+      "title": "GX Syntax",
+      "properties": {
+        "gxSyntax.tree.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Muestra el árbol de objetos GeneXus en el Explorador y arma el índice de objetos. Desactivarlo apaga el escaneo de archivos .gx."
+        },
+        "gxSyntax.tree.autoReveal": {
+          "type": "boolean",
+          "default": true,
+          "description": "Al cambiar de archivo, selecciona su objeto en el árbol de GeneXus."
+        },
+        "gxSyntax.index.maxFiles": {
+          "type": "number",
+          "default": 20000,
+          "minimum": 100,
+          "description": "Máximo de archivos .gx que se leen por carpeta de KB. Si se supera, el árbol muestra solo una parte."
+        }
+      }
+    },
+    "colors": [
+      {
+        "id": "gxSyntax.transaction",
+        "description": "Color del icono de Transacción en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#4cc764",
+          "light": "#1f9d3a",
+          "highContrast": "#4cc764",
+          "highContrastLight": "#1f9d3a"
+        }
+      },
+      {
+        "id": "gxSyntax.procedure",
+        "description": "Color del icono de Procedure en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#a29bff",
+          "light": "#605ca8",
+          "highContrast": "#a29bff",
+          "highContrastLight": "#605ca8"
+        }
+      },
+      {
+        "id": "gxSyntax.dataProvider",
+        "description": "Color del icono de Data Provider en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#2dd4c4",
+          "light": "#00746b",
+          "highContrast": "#2dd4c4",
+          "highContrastLight": "#00746b"
+        }
+      },
+      {
+        "id": "gxSyntax.webPanel",
+        "description": "Color del icono de Web Panel en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#5aaaff",
+          "light": "#1a6fd1",
+          "highContrast": "#5aaaff",
+          "highContrastLight": "#1a6fd1"
+        }
+      },
+      {
+        "id": "gxSyntax.webComponent",
+        "description": "Color del icono de Web Component en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#7fd0ff",
+          "light": "#0b7bb5",
+          "highContrast": "#7fd0ff",
+          "highContrastLight": "#0b7bb5"
+        }
+      },
+      {
+        "id": "gxSyntax.dataSelector",
+        "description": "Color del icono de Data Selector en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#ffae42",
+          "light": "#c26a00",
+          "highContrast": "#ffae42",
+          "highContrastLight": "#c26a00"
+        }
+      },
+      {
+        "id": "gxSyntax.sdt",
+        "description": "Color del icono de SDT en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#ff8a4c",
+          "light": "#d9480f",
+          "highContrast": "#ff8a4c",
+          "highContrastLight": "#d9480f"
+        }
+      },
+      {
+        "id": "gxSyntax.table",
+        "description": "Color del icono de Tabla en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#8e8ad8",
+          "light": "#4b4797",
+          "highContrast": "#8e8ad8",
+          "highContrastLight": "#4b4797"
+        }
+      },
+      {
+        "id": "gxSyntax.domain",
+        "description": "Color del icono de Domain en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#26b5a8",
+          "light": "#00746b",
+          "highContrast": "#26b5a8",
+          "highContrastLight": "#00746b"
+        }
+      },
+      {
+        "id": "gxSyntax.api",
+        "description": "Color del icono de API en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#00c4b4",
+          "light": "#007f75",
+          "highContrast": "#00c4b4",
+          "highContrastLight": "#007f75"
+        }
+      },
+      {
+        "id": "gxSyntax.masterPage",
+        "description": "Color del icono de Master Page en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#ffc44d",
+          "light": "#b07400",
+          "highContrast": "#ffc44d",
+          "highContrastLight": "#b07400"
+        }
+      },
+      {
+        "id": "gxSyntax.externalObject",
+        "description": "Color del icono de External Object en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#ff5c8a",
+          "light": "#c4124a",
+          "highContrast": "#ff5c8a",
+          "highContrastLight": "#c4124a"
+        }
+      },
+      {
+        "id": "gxSyntax.workWith",
+        "description": "Color del icono de Work With en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#00bfae",
+          "light": "#00796b",
+          "highContrast": "#00bfae",
+          "highContrastLight": "#00796b"
+        }
+      },
+      {
+        "id": "gxSyntax.diagram",
+        "description": "Color del icono de Diagrama y otros en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#9aa0a6",
+          "light": "#5f6368",
+          "highContrast": "#9aa0a6",
+          "highContrastLight": "#5f6368"
+        }
+      },
+      {
+        "id": "gxSyntax.module",
+        "description": "Color del icono de Módulo en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#00bfae",
+          "light": "#00796b",
+          "highContrast": "#00bfae",
+          "highContrastLight": "#00796b"
+        }
+      },
+      {
+        "id": "gxSyntax.mainProgram",
+        "description": "Color del icono de Main Programs en el árbol de objetos GeneXus.",
+        "defaults": {
+          "dark": "#4cc764",
+          "light": "#1f9d3a",
+          "highContrast": "#4cc764",
+          "highContrastLight": "#1f9d3a"
+        }
+      }
     ]
   },
   "scripts": {
-    "test": "node scripts/tokenize-check.js && node scripts/sections-check.js && node scripts/signature-check.js && node scripts/completion-check.js",
+    "test": "node scripts/tokenize-check.js && node scripts/sections-check.js && node scripts/signature-check.js && node scripts/completion-check.js && node scripts/index-check.js",
     "themes": "node scripts/build-themes.js",
     "package": "vsce package"
   },
@@ -136,5 +386,8 @@
     "vscode-oniguruma": "^2.0.1",
     "vscode-textmate": "^9.1.0"
   },
-  "main": "./src/extension.js"
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "workspaceContains:**/*.gx"
+  ]
 }

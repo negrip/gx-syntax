@@ -7,6 +7,7 @@ const { parseSections } = require('./sections');
 const catalog = require('./catalog');
 const { collectSymbols } = require('./symbols');
 const { findCall, signatureFor } = require('./signature');
+const { registerTree } = require('./tree');
 
 const NAME_RE = /^[A-Za-z_][A-Za-z0-9_]*$/;
 
@@ -188,6 +189,7 @@ const signatureProvider = {
 };
 
 function activate(context) {
+  registerTree(context);
   context.subscriptions.push(
     vscode.commands.registerCommand('gxSyntax.newObject', newObject),
     vscode.commands.registerCommand('gxSyntax.goToSection', goToSection),

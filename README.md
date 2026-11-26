@@ -14,10 +14,13 @@ Es declarativa: solo una gramática TextMate y dos temas. No ejecuta código, no
 - **`#Documentation`** resaltado como Markdown.
 - **Plegado** de secciones y de bloques `Event`/`Sub`.
 - **Temas** `GX Dark` y `GX Light` (opcionales).
-- **Nuevo objeto:** clic derecho en una carpeta del Explorador → *Nuevo objeto GeneXus...* (o `GX: Nuevo objeto GeneXus...` en la paleta de comandos). Elegís el tipo (Transacción, Procedure, Web Panel, Web Component, Data Provider, SDT, Domain, API, Master Page) y el nombre, y crea el `.gx` desde una plantilla.
+- **Nuevo objeto:** clic derecho en `src`, un módulo o una carpeta del árbol **GeneXus** → *Nuevo objeto GeneXus...* (o `GX: Nuevo objeto GeneXus...` en la paleta de comandos). Elegís el tipo (Transacción, Procedure, Web Panel, Web Component, Data Provider, SDT, Domain, API, Master Page) y el nombre, y crea el `.gx` desde una plantilla.
 - **Navegación por secciones:** `Ctrl+Alt+S` (o clic derecho → *Ir a sección...*) lista las secciones, `Event` y `Sub` del archivo y salta a la elegida; `Ctrl+Alt+B` vuelve a donde estabas. Las secciones también aparecen en el **Outline**, en las migas de pan y con `Ctrl+Shift+O`.
 - **Autocompletado** de funciones y métodos de GeneXus: se insertan con paréntesis (`&x.SetEmpty()`); si llevan parámetros, el cursor queda dentro. Al escribir `&` sugiere las variables del objeto (declaradas, usadas y del sistema) y, fuera de `&`, sus atributos.
 - **Ayuda de firma:** al escribir `(` o `,` muestra los parámetros con su tipo y el tipo de retorno de la función, y resalta el parámetro activo. Cubre 36 funciones de uso frecuente, con enlace a la wiki de GeneXus.
+- **Árbol de objetos:** una vista "GeneXus" en el Explorador que organiza los `.gx` como el KB Explorer de la IDE (módulos, carpetas, objetos con icono, *Main Programs*, tablas asociadas). Aparece sola al abrir una carpeta de KB (`src`, `ref`, la carpeta que las contiene o cualquiera con archivos `.gx`); en proyectos sin `.gx` no aparece. Incluye **Buscar objeto...** y sigue al archivo activo.
+
+  **¿Dónde está?** En el Explorador (el primer icono de la barra lateral izquierda, o `Ctrl+Shift+E`), como un panel más llamado **GeneXus**, en la lista de paneles *WorkSpace*, *Outline*, *Timeline*. Suele estar cerrado y abajo del todo: hacé clic en su título para desplegarlo. Si no lo encontrás, `Ctrl+Shift+P` → **GX: Mostrar árbol de objetos** lo abre. La primera vez que se detecta una KB, la extensión muestra un aviso con un botón **Mostrar**. Para tener más espacio, arrastrá el título del panel hacia arriba o hacia la barra de iconos de la izquierda.
 - **Snippets** de sintaxis GeneXus: `if`, `foreach`, `forin`, `docase`, `event`, `sub`, `new`, `parm`, `#rules`, `#variables`, etc.
 
 ## Instalación
@@ -40,6 +43,24 @@ Los archivos `.gx` se asocian solos al lenguaje **GeneXus (GX)** (id `genexus-gx
 ### Elegir un tema
 
 `Ctrl+K Ctrl+T` y elegir **GX Dark** o **GX Light**. Los temas son opcionales: sin ellos, el resaltado usa los colores de tu tema actual.
+
+### Ajustes
+
+| Ajuste | Por defecto | Qué hace |
+|---|---|---|
+| `gxSyntax.tree.enabled` | `true` | Muestra el árbol de objetos y arma el índice. En `false` no se lee ningún archivo. |
+| `gxSyntax.tree.autoReveal` | `true` | Selecciona en el árbol el objeto del archivo activo. |
+| `gxSyntax.index.maxFiles` | `20000` | Máximo de archivos `.gx` que se leen por carpeta de KB. |
+
+Los colores de los iconos son colores de tema y se pueden cambiar en `settings.json`, por ejemplo:
+
+```json
+"workbench.colorCustomizations": { "gxSyntax.procedure": "#ff8800" }
+```
+
+Los identificadores disponibles están en `package.json`, sección `contributes.colors` (`gxSyntax.transaction`, `gxSyntax.webPanel`, ...).
+
+El árbol se arma solo con lo que hay en los archivos: una carpeta con `module.toml` es un módulo, las carpetas `#...` no se muestran, y una carpeta `@Nombre` es una carpeta de la IDE (se muestra sin la arroba), una carpeta con el nombre de un objeto vecino (`City.gx` + `City/`) cuelga de ese objeto, y los objetos de `#domains`, `#images`, `#subtypes` y similares se muestran dentro de su módulo. No está conectado a la KB.
 
 ## Documentación
 
